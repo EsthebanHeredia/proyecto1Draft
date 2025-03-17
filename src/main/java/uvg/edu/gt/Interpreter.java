@@ -127,7 +127,7 @@ public class Interpreter {
                 } else if (op == Symbol.DIVISION) {
                     valor = dividir(argsEvaluados);
                 } else {
-                    throw new ErrorInvalidArguments("Función no válida: " + funcion);
+                    valor = aplicar(funcion, argsEvaluados, entorno);
                 }
             } else {
                 throw new ErrorInvalidArguments("No es un operador válido: " + funcion);
@@ -137,6 +137,72 @@ public class Interpreter {
         if (modoDebug) imprimirSalidaDebug(valor);
         return valor;
     }
+
+
+
+
+
+
+
+
+
+
+
+    public Expresion aplicar(Expresion funcion, Expresion args, Expresion entorno) throws ErrorLisp {
+        if (funcion == Symbol.LISTP) return esLista(args) ? Symbol.VERDAD : Symbol.NADA;
+        if (funcion == Symbol.EQUAL) return esIgual(args) ? Symbol.VERDAD : Symbol.NADA;
+        if (funcion == Symbol.LT) return esMenor(args) ? Symbol.VERDAD : Symbol.NADA;
+        if (funcion == Symbol.GT) return esMayor(args) ? Symbol.VERDAD : Symbol.NADA;
+        if (funcion == Symbol.EQUALS_NUM) return esIgualNumerico(args) ? Symbol.VERDAD : Symbol.NADA;
+        throw new ErrorInvalidArguments("Función no reconocida: " + funcion);
+    }
+
+    // Métodos de predicados
+    private boolean esLista(Expresion expr) {
+        if (expr == Symbol.NADA) return true;
+        if (expr.esAtomo()) return false;
+        try {
+            return esLista(segundo(expr));
+        } catch (ErrorInvalidArguments e) {
+            return false;
+        }
+    }
+
+    private boolean esIgual(Expresion exprs) throws ErrorInvalidArguments {
+        Expresion primero = primero(exprs);
+        Expresion segundo = segundo(exprs);
+        return primero.equals(segundo);
+    }
+
+    private boolean esMenor(Expresion exprs) throws ErrorInvalidArguments {
+        return valorNumerico(primero(exprs)) < valorNumerico(segundo(exprs));
+    }
+
+    private boolean esMayor(Expresion exprs) throws ErrorInvalidArguments {
+        return valorNumerico(primero(exprs)) > valorNumerico(segundo(exprs));
+    }
+
+    private boolean esIgualNumerico(Expresion exprs) throws ErrorInvalidArguments {
+        return valorNumerico(primero(exprs)) == valorNumerico(segundo(exprs));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private Expresion evaluarArgumentos(Expresion args, Expresion entorno) throws ErrorLisp {
         if (args == Symbol.NADA) {

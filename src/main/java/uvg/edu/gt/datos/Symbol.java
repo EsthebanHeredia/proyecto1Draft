@@ -15,6 +15,13 @@ public class Symbol extends Atom {
     public static final Symbol MULTIPLICACION = simbolo("*");
     public static final Symbol DIVISION = simbolo("/");
 
+    //SIMBOLOS PARA PREDICADOS
+    public static final Symbol LISTP = simbolo("LISTP");
+    public static final Symbol EQUAL = simbolo("EQUAL");
+    public static final Symbol LT = simbolo("<");
+    public static final Symbol GT = simbolo(">");
+    public static final Symbol EQUALS_NUM = simbolo("EQUALS_NUM");
+
     private final String nombre;
 
     private Symbol(String nombre) {
